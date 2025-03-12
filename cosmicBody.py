@@ -12,7 +12,7 @@ class CosmicBodyManager():
             print(e)
             return False
         
-        select_script = f"SELECT * FROM CosmicBodies WHERE ID=?"
+        select_script = "SELECT * FROM CosmicBodies WHERE ID=?"
         conn, cursor = createConn(self.dsn)
         cursor.execute(select_script,(id))
         cosmicBody = cursor.fetchone()
@@ -39,8 +39,9 @@ class CosmicBodyManager():
                 
         try:
             conn,cursor = createConn(self.dsn)
-            inset_Query = "INSERT INTO CosmicBodies [[name],[type],[distanceToEarth],[size],[YearOfDiscovery] VALUES (?,?,?,?,?)]"
+            inset_Query = "INSERT INTO CosmicBodies ([name],[type],[distanceToEarth],[size],[YearOfDiscovery]) VALUES (?,?,?,?,?)"
             cursor.execute(inset_Query,(name,type,distanceToEarth,size,YearOfDiscovery))
+            conn.commit()
             closeConn(conn,cursor)
         except Exception as e:
             print(str(e))
@@ -60,8 +61,10 @@ class CosmicBodyManager():
         delete_script = F"DELETE FROM CosmicBodies WHERE ID={id}"
         try:
             cursor.execute(delete_script)
+            conn.commit()
             closeConn(conn,cursor)
         except Exception as e:
             print(str(e))
             closeConn(conn,cursor)
-            return
+            return False
+        return True

@@ -59,7 +59,6 @@ serverInput = {
     "action": "1-4"
 }
 
-
 server = Server()
 server.runServer()
 
