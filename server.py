@@ -19,7 +19,7 @@ class Server():
         return parsedJson
     
     def _sendData(self,data,message):
-        self.client_socket.send(json.dumps({"message":message,"data":data}))
+        self.client_socket.send(json.dumps({"message":message,"data":data}).encode())
         return True
     
     def runServer(self):
@@ -31,8 +31,11 @@ class Server():
                 cosmicBodies = self.bodyManager.getAll()
                 return self._sendData(cosmicBodies,"all cosmic Bodies")
             if(action == "1"):
-                cosmicBody = self.bodyManager.get(parsedJson["id"])
+                cosmicBody = self.bodyManager.get(parsedJson["data"]["id"])
                 return self._sendData(cosmicBody,"Body")
             if(action == "2" and parsedJson["credentials"] == "....."):
                 isCreated = self.bodyManager.create(**parsedJson["data"])
                 return self._sendData(isCreated,"Created")
+            if(action == "3" and parsedJson["credentials" == "....."]):
+                isDeleted = self.bodyManager.delete(parsedJson["data"]["id"])
+                return self._sendData(isDeleted,"Deleted")
