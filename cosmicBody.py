@@ -1,18 +1,9 @@
-import pyodbc
-from fakeEnv import dsn
+from sharedFunctions import createConn,closeConn
+
 
 class CosmicBodyManager():
     def __init__(self,dsn):
         self.dsn = dsn
-
-    def createConn(self):
-        conn = pyodbc.connect(dsn)
-        cursor = conn.cursor()
-        return conn, cursor
-    
-    def closeConn(self,conn,cursor):
-        conn.close()
-        cursor.close()
 
     def get(self,id:int):
         try:
@@ -22,18 +13,18 @@ class CosmicBodyManager():
             return False
         
         select_script = f"SELECT ID FROM CosmicBodies WHERE ID={id}"
-        conn, cursor = self.createConn()
+        conn, cursor = createConn(self.dsn)
         cursor.execute(select_script)
         cosmicBody = cursor.fetchall()
-        self.closeConn(conn,cursor)
+        closeConn(conn,cursor)
         return ", ".join(map(str, cosmicBody))
 
     def getAll(self):
         select_script = "SELECT * FROM CosmicBodies"
-        conn,cursor = self.createConn()
+        conn,cursor = createConn(self.dsn)
         cursor.execute(select_script)
         cosmicBodies = cursor.fetchall()
-        self.closeConn(conn,cursor)
+        closeConn(conn,cursor)
         return [", ".join(map(str, row)) for row in cosmicBodies]
 
     def create(self, name:str,type:str,distanceToEarth:int,size:int):
@@ -47,13 +38,13 @@ class CosmicBodyManager():
             return False
                 
         try:
-            conn,cursor = self.createConn()
+            conn,cursor = createConn(self.dsn)
             inset_Query = "INSERT INTO CosmicBodies [[name],[type],[distanceToEarth],[size] VALUES (?,?,?,?)]"
             cursor.execute(inset_Query,(name,type,distanceToEarth,size))
-            self.closeConn(conn,cursor)
+            closeConn(conn,cursor)
         except Exception as e:
             print(str(e))
-            self.closeConn(conn,cursor)
+            closeConn(conn,cursor)
             return False
         
         return True
@@ -65,12 +56,12 @@ class CosmicBodyManager():
             print(str(e))
             return False
         
-        conn,cursor = self.createConn()
+        conn,cursor = createConn(self.dsn)
         delete_script = F"DELETE FROM CosmicBodies WHERE ID={id}"
         try:
             cursor.execute(delete_script)
-            self.closeConn(conn,cursor)
+            closeConn(conn,cursor)
         except Exception as e:
             print(str(e))
-            self.closeConn(conn,cursor)
+            closeConn(conn,cursor)
             return

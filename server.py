@@ -3,15 +3,17 @@ import json
 
 from fakeEnv import host,port,dsn
 from cosmicBody import CosmicBodyManager
+from credentialsManager import CredentialsManager
 
 class Server():
     def __init__(self):
-        self.bodyManager = CosmicBodyManager(dsn)
-        self.server_socket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-        self.server_socket.bind((host,port))
-        self.server_socket.listen(1)
+        self._bodyManager = CosmicBodyManager(dsn)
+        self._server_socket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+        self._server_socket.bind((host,port))
+        self._credentialsManager = CredentialsManager(dsn)
+        self._server_socket.listen(1)
         print('Waiting for connection')
-        self.client_socket, self.client_address = self.server_socket.accept()
+        self.client_socket, self.client_address = self._server_socket.accept()
         print("User accepted")
     
     def _recvData(self):
@@ -28,14 +30,23 @@ class Server():
             
             action = parsedJson["action"]
             if(action == "0"):
-                cosmicBodies = self.bodyManager.getAll()
+                cosmicBodies = self._bodyManager.getAll()
                 return self._sendData(cosmicBodies,"all cosmic Bodies")
             if(action == "1"):
-                cosmicBody = self.bodyManager.get(parsedJson["data"]["id"])
+                cosmicBody = self._bodyManager.get(parsedJson["data"]["id"])
                 return self._sendData(cosmicBody,"Body")
-            if(action == "2" and parsedJson["credentials"] == "....."):
-                isCreated = self.bodyManager.create(**parsedJson["data"])
+            if(action == "2" and self._credentialsManager.checkCredentials(parsedJson["credentials"])):
+                isCreated = self._bodyManager.create(**parsedJson["data"])
                 return self._sendData(isCreated,"Created")
-            if(action == "3" and parsedJson["credentials" == "....."]):
-                isDeleted = self.bodyManager.delete(parsedJson["data"]["id"])
+            if(action == "3" and self._credentialsManager.checkCredentials(parsedJson["credentials"])):
+                isDeleted = self._bodyManager.delete(parsedJson["data"]["id"])
                 return self._sendData(isDeleted,"Deleted")
+            if(action == "4"):
+                self.client_socket.close()
+                self._server_socket.close()
+                break
+
+
+server = Server()
+server.runServer()
+
