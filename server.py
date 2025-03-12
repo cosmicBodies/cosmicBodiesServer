@@ -47,7 +47,17 @@ class Server():
                 break
         
 outPut = {"message":"message","data":"data"}
-serverInput = {"credentials":"creds","data":"data","action":"action"}
+
+serverInput = {
+    "credentials": {
+        "username": "Petro",
+        "password": "Poroshenko"
+    },
+    "data": {
+        ...
+    },
+    "action": "1-4"
+}
 
 
 server = Server()
