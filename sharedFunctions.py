@@ -6,5 +6,5 @@ def createConn(dsn):
     return conn, cursor
     
 def closeConn(conn,cursor):
-    conn.close()
     cursor.close()
+    conn.close()
