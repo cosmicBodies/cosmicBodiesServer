@@ -27,7 +27,7 @@ class CosmicBodyManager():
         closeConn(conn,cursor)
         return [", ".join(map(str, row)) for row in cosmicBodies]
 
-    def create(self, name:str,type:str,distanceToEarth:int,size:int):
+    def create(self, name:str,type:str,distanceToEarth:int,size:int,YearOfDiscovery:str):
         if(len(name) > 255 or len(type) > 255):
             return False
         try:
