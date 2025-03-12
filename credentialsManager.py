@@ -8,6 +8,6 @@ class CredentialsManager():
         conn,cursor =  createConn(self.dsn)
         checkScript = "SELECT * FROM [Users] WHERE Password=? AND Username=?"
         cursor.execute(checkScript,(password,username))
-        result = cursor.fetchone(checkScript)
+        result = cursor.fetchone()
         closeConn(conn,cursor)
         return ", ".join(map(str, result))  if result else False
