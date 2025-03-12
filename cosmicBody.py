@@ -39,7 +39,7 @@ class CosmicBodyManager():
                 
         try:
             conn,cursor = createConn(self.dsn)
-            inset_Query = "INSERT INTO CosmicBodies [[name],[type],[distanceToEarth],[size] VALUES (?,?,?,?)]"
+            inset_Query = "INSERT INTO CosmicBodies [[name],[type],[distanceToEarth],[size],[YearOfDiscovery] VALUES (?,?,?,?)]"
             cursor.execute(inset_Query,(name,type,distanceToEarth,size))
             closeConn(conn,cursor)
         except Exception as e:
