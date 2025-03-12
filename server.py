@@ -31,16 +31,16 @@ class Server():
             action = parsedJson["action"]
             if(action == "0"):
                 cosmicBodies = self._bodyManager.getAll()
-                return self._sendData(cosmicBodies,"all cosmic Bodies")
+                self._sendData(cosmicBodies,"all cosmic Bodies")
             if(action == "1"):
                 cosmicBody = self._bodyManager.get(parsedJson["data"]["id"])
-                return self._sendData(cosmicBody,"Body")
+                self._sendData(cosmicBody,"Body")
             if(action == "2" and self._credentialsManager.checkCredentials(**parsedJson["credentials"])):
                 isCreated = self._bodyManager.create(**parsedJson["data"])
-                return self._sendData(isCreated,"Created")
+                self._sendData(isCreated,"Created")
             if(action == "3" and self._credentialsManager.checkCredentials(**parsedJson["credentials"])):
                 isDeleted = self._bodyManager.delete(parsedJson["data"]["id"])
-                return self._sendData(isDeleted,"Deleted")
+                self._sendData(isDeleted,"Deleted")
             if(action == "4"):
                 self.client_socket.close()
                 self._server_socket.close()

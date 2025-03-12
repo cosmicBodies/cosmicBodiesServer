@@ -12,10 +12,10 @@ class CosmicBodyManager():
             print(e)
             return False
         
-        select_script = f"SELECT ID FROM CosmicBodies WHERE ID={id}"
+        select_script = f"SELECT ID FROM CosmicBodies WHERE ID=?"
         conn, cursor = createConn(self.dsn)
-        cursor.execute(select_script)
-        cosmicBody = cursor.fetchall()
+        cursor.execute(select_script,(id))
+        cosmicBody = cursor.fetchone()
         closeConn(conn,cursor)
         return ", ".join(map(str, cosmicBody))
 
