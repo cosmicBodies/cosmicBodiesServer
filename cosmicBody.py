@@ -26,7 +26,7 @@ class CosmicBodyManager():
         cursor.execute(select_script)
         cosmicBody = cursor.fetchall()
         self.closeConn(conn,cursor)
-        return cosmicBody
+        return ", ".join(map(str, cosmicBody))
 
     def getAll(self):
         select_script = "SELECT * FROM CosmicBodies"
@@ -34,7 +34,7 @@ class CosmicBodyManager():
         cursor.execute(select_script)
         cosmicBodies = cursor.fetchall()
         self.closeConn(conn,cursor)
-        return cosmicBodies
+        return [", ".join(map(str, row)) for row in cosmicBodies]
 
     def create(self, name:str,type:str,distanceToEarth:int,size:int):
         if(len(name) > 255 or len(type) > 255):
